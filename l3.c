@@ -6,6 +6,16 @@
 #include <sys/wait.h>
 #include <signal.h>
 
+void k_c()
+{
+    wait(NULL);
+}
+
+void si_pr(int signo)
+{
+    printf("signal: %d\n", signo);
+}
+
 int main(int argc, char *argv[])
 {
     signal(SIGCHLD, k_c);
@@ -53,6 +63,7 @@ int main(int argc, char *argv[])
 	    printf(" CHILD: Это процесс-потомок!\n");
 	    printf(" CHILD: Мой PID -- %d\n", getpid());
 	    printf(" CHILD: PID моего родителя -- %d\n", getppid());
+	    //kill(getpid(), SIGUSR1);
 	    execl(argv[2], argv[2], argv[3], argv[4], argv[5], NULL);
 	    wait(NULL);
 	    break;
