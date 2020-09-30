@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 	case 'c':
 	    //pid_t p = fork();
 	    //if(p == 0){
-	    execl(argv[2], argv[2], argv[3], argv[4], argv[5]);
+	    execl(argv[2], argv[2], argv[3], argv[4], argv[5], argv[6]);
 	    //exit(127);
 	    //}
 	    //else{
