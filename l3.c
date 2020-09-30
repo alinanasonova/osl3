@@ -4,9 +4,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <signal.h>
 
 int main(int argc, char *argv[])
 {
+    signal(SIGCHLD, k_c);
     if (argc == 1){
 	printf ("?\ntry\n./l2 -h\n./l2 --help\n");
 	exit(1);
@@ -31,11 +33,11 @@ int main(int argc, char *argv[])
     case 'h':
 	printf("Авторы: Александр Шихалев\n\tАлина Насонова\n\tГригорий Голомидов\nВсе доступные аргументы:\n\t-c - Строка ввода команд для вызова проекта из лабораторной 2\n");
 	printf("\t-p - Порождение процесса по его имени и возврат в строку команд после завершения дочернего процесса\n");
+	printf("\t-s - Перевод процесса в фоновый режим\n");
 	printf("\nКраткое описание проекта:\n\tПроект позволяет работать с процессами в ОС Linux\n");
 	printf("Примеры запуска:\n\t./l3 -c <путь к файлу> <аргументы>\n");
-	printf("\t\n\t");
-	printf("\n\t\n\t\n");
-	printf("\t\n");
+	printf("\t./l3 -p <путь к файлу> <аргументы>");
+	printf("\t./l3 -s <PID>");
 	printf("\t\n");
 	break;
     case 'c':
@@ -51,19 +53,24 @@ int main(int argc, char *argv[])
 	    printf(" CHILD: Это процесс-потомок!\n");
 	    printf(" CHILD: Мой PID -- %d\n", getpid());
 	    printf(" CHILD: PID моего родителя -- %d\n", getppid());
+	    execl(argv[2], argv[2], argv[3], argv[4], argv[5], NULL);
+	    wait(NULL);
 	    break;
 	default:
 	    printf("PARENT: Это процесс-родитель!\n");
 	    printf("PARENT: Мой PID -- %d\n", getpid());
 	    printf("PARENT: PID моего потомка %d\n",p);
 	    printf("PARENT: Я жду, пока потомок не вызовет exit()...\n");
-	    waitpid(p, 0, 0);
+	    wait(NULL);
 	    break;
 	}
 	char *killme = (char*)malloc(sizeof(char)*5);
 	printf("Kill? PID:\n");
 	scanf("%s", killme);
 	kill(atoi(killme), 9);
+	break;
+    case 's':
+	kill(atoi(argv[2]), SIGTSTP);
 	break;
     }
 }
